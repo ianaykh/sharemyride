@@ -1,0 +1,95 @@
+<!-- "Join Team" (Post) Form -->
+<div class="col-md-4">
+
+    <!-- Creates Main Panel -->
+    <div class="panel panel-success" id="addPanel">
+
+        <!-- Panel Title -->
+        <div class="panel-heading">
+            <h2 id="addPanelHeading" class="panel-title text-center">Enter your details <span class="glyphicon glyphicon-map-marker"></span></h2>
+        </div>
+
+        <!-- Panel Body -->
+        <div class="panel-body">
+
+            <!-- Creates Form (novalidate disables HTML validation, Angular will control) -->
+            <form name="addForm" novalidate>
+
+                <!-- Text Boxes and Other User Inputs. Note ng-model binds the values to Angular $scope -->
+                <div class="form-group">
+                    <label for="firstname">First name </label>
+                    <input type="text" name="fname" class="form-control" id="firstname" placeholder="The name you're called by is..'" ng-model="formData.firstname"
+                    ng-pattern="/^(\D)+$/" required>
+                    <span class="formerrormsg" ng-show="addForm.fname.$error.pattern">Please enter your first name</span>
+
+                </div>
+                <div class="form-group">
+                    <label for="lastname">Last name </label>
+                    <input type="text" ng-pattern="/^(\D)+$/" name="lname" class="form-control" id="lname" placeholder="Your family name is..."
+                    ng-model="formData.lastname" required>
+                    <span class="formerrormsg" ng-show="addForm.lname.$error.pattern">Please enter your first name</span>
+                </div>
+                <label class="radio control-label">Gender</label>
+                <div class="radio">
+                    <label>
+                        <input type="radio" name="optionsRadios" id="radiomale" value="Male" ng-model="formData.gender"> Male
+                    </label>
+                </div>
+                <div class="radio" required>
+                    <label>
+                        <input type="radio" name="optionsRadios" id="radiofemale" value="Female" ng-model="formData.gender"> Female
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="age">Age</label>
+                    <input type="number" class="form-control" name="age" id="age" placeholder="72" ng-model="formData.age" min="18" max="99"
+                    required>
+                    <span class="formerrormsg" ng-show="addForm.age.$error.min">Wait till you're 18!</span>
+                    <span class="formerrormsg" ng-show="addForm.age.$error.max">Too old to drive</span>
+                </div>
+                <div class="form-group">
+                    <label for="car">Car owned</label>
+                    <input type="text" name="carowned" class="form-control" id="carchoice" placeholder="honda" ng-model="formData.carchoice"
+                    ng-pattern="/^(\D)+$/" required>
+                    <span class="formerrormsg" ng-show="addForm.carowned.$error.pattern">Enter your car manufacturer not number</span>
+                </div>
+                <div class="form-group">
+                    <label for="carcapacity">Car capacity</label>
+                    <input type="number" name="carcap" class="form-control" id="carcapacity" placeholder="1" ng-model="formData.carcapacity"
+                    min="4" max="10" required>
+                    <span class="formerrormsg" ng-show="addForm.carcap.$error.min">"No mini cars allowed"</span>
+                    <span class="formerrormsg" ng-show="addForm.carcap.$error.max">"Do u own a truck??"</span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone number</label>
+                    <input type="number" name="phoneno" class="form-control" id="phonenumber" placeholder="714*******" ng-minlength="10" ng-model="formData.phone"
+                    ng-minlength="10" ng-maxlength="10" required>
+                    <span class="formerrormsg" ng-show="addForm.phoneno.$error.minlength">too short for a phone number...</span>
+                    <span class="formerrormsg" ng-show="addForm.phoneno.$error.maxlength">exceeded 10 digits!</span>
+                </div>
+                <div class="form-group">
+                    <label for="latitude">Latitude</label>
+                    <input type="text" class="form-control" id="latitude" value="0.0" ng-model="formData.latitude" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="longitude">Longitude</label>
+                    <input type="text" class="form-control" id="longitude" value="0.0" ng-model="formData.longitude" readonly>
+                </div>
+                <div class="form-group">
+                    <!-- Note RefreshLoc button tied to addCtrl. This requests a refresh of the HTML5 verified location. -->
+                    <label for="verified">Location <span><button ng-click="refreshLoc()" class="btn btn-default btn-xs"><span class="glyphicon glyphicon-refresh"></span></button>
+                        </span>
+                    </label>
+                    <input type="text" class="form-control" id="verified" placeholder="retriving location..." ng-model="formData.htmlverified"
+                    readonly>
+                </div>
+
+                <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
+                <button type="submit" class="btn btn-success btn-block" ng-click="createUser()" ng-disabled="addForm.$invalid">Submit</button>
+            </form>
+        </div>
+    </div>
+</div>
+<p ng-show="">driver added</p>

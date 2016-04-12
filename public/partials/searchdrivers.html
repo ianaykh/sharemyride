@@ -1,0 +1,126 @@
+<!-- Find Teammates (Query) Form -->
+<div class="col-md-4">
+
+    <!-- Creates Main Panel -->
+    <div class="panel panel-info">
+
+        <!-- Panel Title -->
+        <div class="panel-heading">
+            <h2 class="panel-title text-center">Enter your details and preferences <span class="glyphicon glyphicon-search"></span></h2>
+        </div>
+
+        <!-- Panel Body -->
+        <div class="panel-body">
+
+            <!-- Creates Form -->
+            <form name="queryForm">
+
+                <!-- Text Boxes and Other User Inputs. Note ng-model binds the values to Angular $scope -->
+                <div class="form-group">
+                    <label for="latitude">Your Latitude</label>
+                    <input type="text" class="form-control" id="latitude" placeholder="39.5" ng-model="formData.latitude" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="longitude">Your Longitude</label>
+                    <input type="text" class="form-control" id="longitude" placeholder="-98.35" ng-model="formData.longitude" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="distance">Max. Distance (miles)</label>
+                    <input type="text" class="form-control" id="distance" placeholder="500" ng-model="formData.distance">
+                </div>
+
+                <!-- Note ng-true-value which translates check values into explicit gender strings -->
+                <label>Gender</label>
+                <div class="form-group">
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="optionsRadios" id="checkmale" value="Male" ng-model="formData.male" ng-true-value="'Male'"> Male
+                    </label>
+                    <label class="checkbox-inline">
+                        <input type="checkbox" name="optionsRadios" id="checkfemale" value="Female" ng-model="formData.female" ng-true-value="'Female'"> Female
+                    </label>
+
+                </div>
+                <div class="form-group">
+                    <label for="minage">Min. Age</label>
+                    <input type="number" class="form-control" id="minage" placeholder="5" ng-model="formData.minage">
+                </div>
+                <div class="form-group">
+                    <label for="maxage">Max Age</label>
+                    <input type="number" class="form-control" id="maxage" placeholder="80" ng-model="formData.maxage">
+                </div>
+                <div class="form-group">
+                    <label for="Car">Car Preference</label>
+                    <input type="text" class="form-control" id="carchoice" placeholder="Honda" ng-model="formData.carchoice">
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="verified" id="radiomale" value="True" ng-model="formData.verified"> <strong>Location Verified...</strong>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Query button. Note that its tied to queryUsers() function from queryCtrl.  -->
+                <button type="submit" class="btn btn-info btn-block" ng-click="queryUsers()">Search</button>
+            </form>
+        </div>
+
+        <!-- Footer panel for displaying count. Note how it will only display if queryCount is greater than 0 -->
+        <div ng-show="queryCount>0" class="panel-footer">
+            <p class="text-center"> Scroll below for details </p>
+
+
+        </div>
+    </div> 
+</div>
+<div class="row" ng-show="queryCount>0" ng-cloak>
+    <div class="col-md-12 details">
+        <h1 class="text-center .text-success">We found {{queryCount}} drivers around you!</h1>
+        
+        <table class="table table-hover">
+
+            <tr>
+                <td>Firstname</td>
+               
+                <td>Age</td>
+                <td>Car</td>
+                <td>Gender</td>
+                
+                <td>View on the map</td>
+                <td>Click below to ping the driver</td>
+            </tr>
+
+
+            <tr ng-repeat="item in results">
+                <td>{{item.firstname}}</td>
+               
+                <td>{{item.age}}</td>
+                <td>{{item.carchoice}}</td>
+                <td>{{item.gender}}</td>
+                <td><a href="" ng-click="showdriverlocationonmap(item)">Click here to see it on map</a></td>                
+                <td><a href="" ng-click="sendMyLocation(item)">Click here to send your location</td>
+                
+                
+            </tr>
+            
+
+        </table>
+        <hr/>
+    </div>
+</div>
+<div class="row" ng-show="queryCount==0" ng-cloak>
+    <div class="col-md-12 col-sm-12 col-xs-6 details ">
+        <p class="text-center text-info ">Unfortunately, there are {{queryCount}} drivers around you!</p>
+        <p class="text-center  text-danger">Please increase your search radius and try again</p>        
+    </div>
+</div>
+<div class="row" ng-show="showlocationsent && queryCount>0" ng-cloak>
+    <div class="col-md-12 details">
+        <p class="text-center bg-success " ng-model="locationstring">Your address is <b> {{locationstring}}</b></p>
+        <hr/>
+        <h2>Driver details</h2>
+        <p> First Name : {{driverfname}} </p>
+        <p> Last Name : {{driverlname}}</p>
+        <p> Phone Number : {{phonenumberdriver}}</p>      
+    </div>
+</div>

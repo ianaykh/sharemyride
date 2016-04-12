@@ -1,0 +1,94 @@
+<!doctype html>
+<html class="no-js">
+
+<head>
+    <meta charset="utf-8">
+
+    <meta name="description" content="An example demonstrating Google Map integration with MEAN Apps">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="../bower_components/bootstrap/dist/css/bootstrap.css" />
+    <link rel="stylesheet" href="/style.css" />
+    
+
+    <!-- Google Maps API -->
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDrn605l7RPadiwdzsOlRw9O28lxfYBJ6s"></script>
+
+    <!-- Modernizr -->
+    <script src="../bower_components/modernizr/bin/modernizr"></script>
+
+    <!-- JS Source -->
+    
+    <title> Share My ride </title>
+
+</head>
+
+<body ng-app="sharemyride">
+    <!--[if lt IE 10]>
+<p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+<![endif]-->
+
+    <div class="container jumbotron">
+        <!-- Header Menu. Note use of headerCtrl -->
+        <div class="header" ng-controller="headerCtrl">
+
+
+
+
+            <div class="inner cover text-center">
+                <h1 class="">       Welcome to Share my Ride !          </h1> <span class="glyphicons glyphicons-businessman"></span></span>
+            </div>
+
+
+
+
+            <!-- Header items are made active upon selection -->
+            <ul class="nav  nav-tabs nav-justified">
+                <li ng-class="{ active: isActive('/join')}"><a href="#/join"><span class="glyphicon glyphicon-user"></span> Join the Ride</a></li>
+                <li ng-class="{ active: isActive('/search')}"><a href="#/search"><span class="glyphicon glyphicon-road"></span>Find a Rider</a></li>
+            </ul>
+
+            <!-- Header Title -->
+
+        </div>
+
+        <!-- Map and Side Panel -->
+        <div class="row content">
+
+            <!-- Google Map -->
+
+
+            <!-- Side Panel (Controlled by ng-view) -->
+
+            <div class="col-md-8">
+                <div id="map"></div>
+            </div>
+            <div ng-view></div>
+            
+        </div>
+
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Sharemyride</p>
+        </div>
+
+    </div>
+
+</body>
+
+<script src="../bower_components/jquery/dist/jquery.js"></script>
+<script src="../bower_components/angular/angular.js"></script>
+<script src="../bower_components/angular-route/angular-route.js"></script>
+<script src="../bower_components/angularjs-geolocation/dist/angularjs-geolocation.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.2/jquery.min.js"></script>
+<!-- Angular Files -->
+<script src="js/app.js"></script>
+<script src="js/locationservice.js"></script>
+<script src="js/addCtrl.js"></script>
+<script src="js/queryCtrl.js"></script>
+<script src="js/headerCtrl.js"></script>
+
+
+</html>
