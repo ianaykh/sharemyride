@@ -1,5 +1,6 @@
 <!-- Find Teammates (Query) Form -->
-<div class="col-md-4">
+
+<div class="col-md-4 col-sm-12 col-xs-12">
 
     <!-- Creates Main Panel -->
     <div class="panel panel-info">
@@ -13,7 +14,7 @@
         <div class="panel-body">
 
             <!-- Creates Form -->
-            <form name="queryForm">
+            <form name="queryForm" autocomplete="off">
 
                 <!-- Text Boxes and Other User Inputs. Note ng-model binds the values to Angular $scope -->
                 <div class="form-group">
@@ -45,6 +46,13 @@
                     <input type="number" class="form-control" id="minage" placeholder="5" ng-model="formData.minage">
                 </div>
                 <div class="form-group">
+                    <label for="passengerphonenumber">Enter you phone number to be sent to the driver</label>
+                    <input type="number" name="passengerphonenumber" id="passengerphonenumber" ng-minlength="10" ng-maxlength="10" required class="form-control"
+                        id="minage" ng-model="formData.passengerphone">
+                    <span class="formerrormsg" ng-show="queryForm.passengerphonenumber.$error.minlength">too short for a phone number...</span>
+                    <span class="formerrormsg" ng-show="queryForm.passengerphonenumber.$error.maxlength">exceeded 10 digits!</span>
+                </div>
+                <div class="form-group">
                     <label for="maxage">Max Age</label>
                     <input type="number" class="form-control" id="maxage" placeholder="80" ng-model="formData.maxage">
                 </div>
@@ -61,7 +69,7 @@
                 </div>
 
                 <!-- Query button. Note that its tied to queryUsers() function from queryCtrl.  -->
-                <button type="submit" class="btn btn-info btn-block" ng-click="queryUsers()">Search</button>
+                <button type="submit" class="btn btn-info btn-block" ng-click="queryUsers()" ng-disabled="queryForm.$invalid">Search</button>
             </form>
         </div>
 
@@ -71,19 +79,21 @@
 
 
         </div>
-    </div> 
+    </div>
 </div>
-<div class="row" ng-show="queryCount>0" ng-cloak>
-    <div class="col-md-12 details">
+<!--<div class="row col-md-12 col-xs-12 panel panel-default" ng-show="queryCount>0 && showdriverlist" ng-cloak>
+    <div class="panel-body col-md-12 col-xs-12 table-responsive">
         <h1 class="text-center .text-success">We found {{queryCount}} drivers around you!</h1>
         
-        <table class="table table-hover">
+        <table class="table table-hover ">
 
             <tr>
                 <td>Firstname</td>
                
                 <td>Age</td>
                 <td>Car</td>
+                <td>Capacity</td>
+                <td>Filled seats</td>
                 <td>Gender</td>
                 
                 <td>View on the map</td>
@@ -91,36 +101,83 @@
             </tr>
 
 
-            <tr ng-repeat="item in results">
+            <tr id="{{item._id}}" ng-repeat="item in results">
                 <td>{{item.firstname}}</td>
                
                 <td>{{item.age}}</td>
-                <td>{{item.carchoice}}</td>
+                <td>{{item.car[0].Name}}</td>
+                <td>{{item.car[0].capacity}}</td>
+                <td class="currentseats">{{item.passengers_info.length}}</td>
                 <td>{{item.gender}}</td>
                 <td><a href="" ng-click="showdriverlocationonmap(item)">Click here to see it on map</a></td>                
-                <td><a href="" ng-click="sendMyLocation(item)">Click here to send your location</td>
-                
-                
+                <td><a href="" ng-click="sendMyLocation(item)">Click here to send your location</td>               
             </tr>
             
 
         </table>
-        <hr/>
+       
+    </div>
+</div>-->
+<div class="row col-md-12 col-xs-12 panel panel-default" ng-show="queryCount>0 && showdriverlist" ng-cloak>
+    <div class="panel-body col-md-12 col-xs-12 w3-responsive">
+        <h1 class="text-center w3-green">We found {{queryCount}} drivers around you!</h1>
+        <table class="w3-table w3-bordered w3-striped  ">
+            <tr class="w3-blue">
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Car</th>
+                <th>Capacity</th>
+                <th>Filled seats</th>
+                <th>Gender</th>
+
+                <th>View on the map</th>
+                <th>Click below to ping the driver</th>
+            </tr>
+            <tr id="{{item._id}}" ng-repeat="item in results">
+                <td>{{item.firstname}}</td>
+
+                <td>{{item.age}}</td>
+                <td>{{item.car[0].Name}}</td>
+                <td>{{item.car[0].capacity}}</td>
+                <td class="currentseats">{{item.passengers_info.length}}</td>
+                <td>{{item.gender}}</td>
+                <td class="text-center"><a href="" ng-click="showdriverlocationonmap(item)"><span class="glyphicon glyphicon-map-marker " ng-click="deletepassengerposition(location,driverid)" aria-hidden="true"></span></a></td>
+                <td class="text-center"><a href="" ng-click="sendMyLocation(item)"><span class="glyphicon glyphicon-ok-circle " ng-click="deletepassengerposition(location,driverid)" aria-hidden="true"></span></td>               
+            </tr>
+</table>
+</table>
+       
     </div>
 </div>
-<div class="row" ng-show="queryCount==0" ng-cloak>
-    <div class="col-md-12 col-sm-12 col-xs-6 details ">
-        <p class="text-center text-info ">Unfortunately, there are {{queryCount}} drivers around you!</p>
-        <p class="text-center  text-danger">Please increase your search radius and try again</p>        
-    </div>
+
+<div class=" col-md-12 w3-animate-left table-responsive details row panel panel-danger" ng-show="queryCount==0" ng-cloak>
+  <div class="panel-heading"><h3>Unfortunately, there are {{queryCount}} drivers around you!</h3></div>
+  <div class="panel-body"><h4>Please increase your search radius and try again<h4></div>
 </div>
-<div class="row" ng-show="showlocationsent && queryCount>0" ng-cloak>
-    <div class="col-md-12 details">
-        <p class="text-center bg-success " ng-model="locationstring">Your address is <b> {{locationstring}}</b></p>
-        <hr/>
-        <h2>Driver details</h2>
+
+
+<div class=" col-md-12 w3-animate-left details table-responsive row panel panel-success" ng-show="showlocationsent && queryCount>0" ng-cloak>
+  <div class="panel-heading"><h3>Your address is <b> {{locationstring}}</b> is sent to the driver below</h3></div>
+  <div class="panel-body">
+      <h3>Driver Details<h3>
+       
         <p> First Name : {{driverfname}} </p>
         <p> Last Name : {{driverlname}}</p>
-        <p> Phone Number : {{phonenumberdriver}}</p>      
-    </div>
+        <p> Phone Number : {{phonenumberdriver}}</p> 
+  </div>
+</div>
+
+<div class=" col-md-12 w3-animate-top details table-responsive row panel panel-warning" ng-show="duplicaterequest" ng-cloak>
+  <div class="panel-heading"><h3>Looks like your request is already handled !</h3></div>
+  <div class="panel-body">
+
+            <h4><span>{{drivername }}</span> is already on the way.If you would like to call him, <span>{{ driverphone }} </span> is his number </h4>
+  </div>
+</div>
+
+
+
+<div id="seatsfull" class=" col-md-12 w3-animate-right details table-responsive row panel panel-warning" ng-show="seatsfull" ng-cloak>
+  <div class="panel-heading"><h3>looks like the seats for this driver are full ! Please select another driver.</h3></div>
+ 
 </div>

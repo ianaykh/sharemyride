@@ -1,8 +1,8 @@
 // Creates the locationservice factory. This will be the primary means by which we interact with Google Maps
 // Dependencies
 
-angular.module('locationservice', [])
-    .factory('locationservice', function($rootScope, $http) {
+angular.module('locationservice', ['socketservice'])
+    .factory('locationservice', function ($rootScope, $http,socketservice) {
 
         // Initialize Variables
         // -------------------------------------------------------------
@@ -28,7 +28,7 @@ angular.module('locationservice', [])
         // Functions
         // --------------------------------------------------------------
         // Refresh the Map with new data. Takes three parameters (lat, long, and filtering results)
-        googleMapService.refresh = function(latitude, longitude, filteredResults) {
+        googleMapService.refresh = function (latitude, longitude, filteredResults) {
 
             // Clears the holding array of locations
             locations = [];
@@ -51,14 +51,14 @@ angular.module('locationservice', [])
             else {
 
                 // Perform an AJAX call to get all of the records in the db.
-                $http.get('/user').success(function(response) {
+                $http.get('/user').success(function (response) {
 
                     // Then convert the results into map points
                     locations = convertToMapPoints(response);
 
                     // Then initialize the map -- noting that no filter was used.
                     initialize(latitude, longitude, false);
-                }).error(function() { });
+                }).error(function () { });
             }
         };
 
@@ -68,7 +68,7 @@ angular.module('locationservice', [])
         // --------------------------------------------------------------
 
         // Convert a JSON of users into map points
-        var convertToMapPoints = function(response) {
+        var convertToMapPoints = function (response) {
 
             // Clear the locations holder
             var locations = [];
@@ -101,7 +101,7 @@ angular.module('locationservice', [])
 
 
         // Constructor for generic location
-        var Location = function(latlon, message, firstname, gender, age, carchoice) {
+        var Location = function (latlon, message, firstname, gender, age, carchoice) {
             this.latlon = latlon;
             this.message = message;
             this.firstname = firstname;
@@ -110,7 +110,7 @@ angular.module('locationservice', [])
             this.carchoice = carchoice;
         };
 
-        var myLocationcontroller = function(myLocationdiv, map, pos) {
+        var myLocationcontroller = function (myLocationdiv, map, pos) {
 
             var myLocationUI = document.createElement('div');
             myLocationUI.style.backgroundColor = '#fff';
@@ -133,7 +133,7 @@ angular.module('locationservice', [])
             myLocationtext.innerHTML = "Your location";
             myLocationUI.appendChild(myLocationtext);
 
-            myLocationUI.addEventListener('click', function() {
+            myLocationUI.addEventListener('click', function () {
                 map.setZoom(14);
                 map.setCenter(pos);
             });
@@ -141,12 +141,12 @@ angular.module('locationservice', [])
         };
 
         // Initializes the map
-        var initialize = function(latitude, longitude, filter) {
+        var initialize = function (latitude, longitude, filter) {
 
             // Uses the selected lat, long as starting point
-            var myLatLng = { lat:parseFloat(selectedLat) , lng:parseFloat(selectedLong) };
+            var myLatLng = { lat: parseFloat(selectedLat), lng: parseFloat(selectedLong) };
 
-          
+
             // If map has not been created...
             if (!map) {
 
@@ -165,7 +165,7 @@ angular.module('locationservice', [])
                 });
                 mapDuplicate = map;
             }
-              var Homebutton = document.createElement('div');
+            var Homebutton = document.createElement('div');
             var homecontrol = new myLocationcontroller(Homebutton, map, myLatLng);
             Homebutton.index = 1;
             map.controls[google.maps.ControlPosition.TOP_CENTER].push(Homebutton);
@@ -181,7 +181,7 @@ angular.module('locationservice', [])
             }
 
             // Loop through each location in the array and place a marker
-            locations.forEach(function(n, i) {
+            locations.forEach(function (n, i) {
                 var marker = new google.maps.Marker({
                     position: n.latlon,
                     map: map,
@@ -191,7 +191,7 @@ angular.module('locationservice', [])
                 });
 
                 // For each marker created, add a listener that checks for clicks
-                google.maps.event.addListener(marker, 'click', function(e) {
+                google.maps.event.addListener(marker, 'click', function (e) {
                     map.setZoom(17);
                     map.setCenter(marker.getPosition());
                     // When clicked, open the selected marker's message
@@ -217,7 +217,7 @@ angular.module('locationservice', [])
             map.panTo(new google.maps.LatLng(latitude, longitude));
 
             // Clicking on the Map moves the bouncing red marker
-            google.maps.event.addListener(map, 'click', function(e) {
+            google.maps.event.addListener(map, 'click', function (e) {
                 var marker = new google.maps.Marker({
                     position: e.latLng,
                     animation: google.maps.Animation.BOUNCE,
@@ -241,7 +241,7 @@ angular.module('locationservice', [])
                 $rootScope.$broadcast("clicked");
             });
         };
-        googleMapService.zoomIntoMarkerLink = function(event) {
+        googleMapService.zoomIntoMarkerLink = function (event) {
 
             var dlat = parseFloat(event.location[1]);
             var dlong = parseFloat(event.location[0]);
@@ -250,7 +250,7 @@ angular.module('locationservice', [])
 
             var myLatLng = { lat: dlat, lng: dlong };
 
-            geocoder.geocode({ 'location': myLatLng }, function(results, status) {
+            geocoder.geocode({ 'location': myLatLng }, function (results, status) {
                 if (status === google.maps.GeocoderStatus.OK) {
                     if (results[0]) {
 
@@ -282,4 +282,6 @@ angular.module('locationservice', [])
 
         return googleMapService;
     });
+   
+
 

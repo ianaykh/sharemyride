@@ -1,5 +1,10 @@
 <!-- "Join Team" (Post) Form -->
-<div class="col-md-4">
+
+<div class="alert alert-danger" ng-show="notvaliddriver">
+    <strong>Not a valid driver</strong> Our records indicate that you're not registered into the system.
+</div>
+
+<div class="col-md-4" ng-show="showregister">
 
     <!-- Creates Main Panel -->
     <div class="panel panel-success" id="addPanel">
@@ -13,20 +18,20 @@
         <div class="panel-body">
 
             <!-- Creates Form (novalidate disables HTML validation, Angular will control) -->
-            <form name="addForm" novalidate>
+            <form name="addForm" autocomplete="off" novalidate>
 
                 <!-- Text Boxes and Other User Inputs. Note ng-model binds the values to Angular $scope -->
                 <div class="form-group">
                     <label for="firstname">First name </label>
                     <input type="text" name="fname" class="form-control" id="firstname" placeholder="The name you're called by is..'" ng-model="formData.firstname"
-                    ng-pattern="/^(\D)+$/" required>
+                        ng-pattern="/^(\D)+$/" required>
                     <span class="formerrormsg" ng-show="addForm.fname.$error.pattern">Please enter your first name</span>
 
                 </div>
                 <div class="form-group">
                     <label for="lastname">Last name </label>
                     <input type="text" ng-pattern="/^(\D)+$/" name="lname" class="form-control" id="lname" placeholder="Your family name is..."
-                    ng-model="formData.lastname" required>
+                        ng-model="formData.lastname" required>
                     <span class="formerrormsg" ng-show="addForm.lname.$error.pattern">Please enter your first name</span>
                 </div>
                 <label class="radio control-label">Gender</label>
@@ -44,20 +49,20 @@
                 <div class="form-group">
                     <label for="age">Age</label>
                     <input type="number" class="form-control" name="age" id="age" placeholder="72" ng-model="formData.age" min="18" max="99"
-                    required>
+                        required>
                     <span class="formerrormsg" ng-show="addForm.age.$error.min">Wait till you're 18!</span>
                     <span class="formerrormsg" ng-show="addForm.age.$error.max">Too old to drive</span>
                 </div>
                 <div class="form-group">
                     <label for="car">Car owned</label>
                     <input type="text" name="carowned" class="form-control" id="carchoice" placeholder="honda" ng-model="formData.carchoice"
-                    ng-pattern="/^(\D)+$/" required>
+                        ng-pattern="/^(\D)+$/" required>
                     <span class="formerrormsg" ng-show="addForm.carowned.$error.pattern">Enter your car manufacturer not number</span>
                 </div>
                 <div class="form-group">
                     <label for="carcapacity">Car capacity</label>
                     <input type="number" name="carcap" class="form-control" id="carcapacity" placeholder="1" ng-model="formData.carcapacity"
-                    min="4" max="10" required>
+                        min="4" max="10" required>
                     <span class="formerrormsg" ng-show="addForm.carcap.$error.min">"No mini cars allowed"</span>
                     <span class="formerrormsg" ng-show="addForm.carcap.$error.max">"Do u own a truck??"</span>
                 </div>
@@ -65,9 +70,15 @@
                 <div class="form-group">
                     <label for="phone">Phone number</label>
                     <input type="number" name="phoneno" class="form-control" id="phonenumber" placeholder="714*******" ng-minlength="10" ng-model="formData.phone"
-                    ng-minlength="10" ng-maxlength="10" required>
+                        ng-minlength="10" ng-maxlength="10" required>
                     <span class="formerrormsg" ng-show="addForm.phoneno.$error.minlength">too short for a phone number...</span>
                     <span class="formerrormsg" ng-show="addForm.phoneno.$error.maxlength">exceeded 10 digits!</span>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Password</label>
+                    <input type="password" name="password" class="form-control" id="password" ng-model="formData.password" required>
+
+
                 </div>
                 <div class="form-group">
                     <label for="latitude">Latitude</label>
@@ -83,7 +94,7 @@
                         </span>
                     </label>
                     <input type="text" class="form-control" id="verified" placeholder="retriving location..." ng-model="formData.htmlverified"
-                    readonly>
+                        readonly>
                 </div>
 
                 <!-- Submit button. Note that its tied to createUser() function from addCtrl. Also note ng-disabled logic which prevents early submits.  -->
@@ -92,4 +103,61 @@
         </div>
     </div>
 </div>
-<p ng-show="">driver added</p>
+
+ 
+
+<div class="col-md-6 panel panel-info" ng-show="showLogin" ng-cloak>
+   <div class="panel-heading">Please sign in</div>
+    <div class="panel-body">
+        <form name="driversignin" class="form-signin col-md-7" novalidate>
+            
+            
+            <label for="loginphonenumber" class="sr-only">Phone number</label>
+            <input type="number" id="loginphonenumber" ng-minlength="10" ng-maxlength="10" name="loginphonenumber" class="form-control"
+                placeholder="phone number" ng-model="loginformData.loginphonenumber" required autofocus>
+            <span class="formerrormsg" ng-show="driversignin.loginphonenumber.$error.minlength">too short for a phone number...</span>
+            <span class="formerrormsg" ng-show="driversignin.loginphonenumber.$error.maxlength">exceeded 10 digits!</span>
+
+            <label for="passwordlogin" class="sr-only">Lastname</label>
+            <input type="password" name="passwordlogin" id="passwordlogin" ng-model="loginformData.loginpassword" class="form-control"
+                placeholder="Enter your password" required autofocus>
+
+            <button class="btn btn-lg btn-primary btn-block" ng-click="logindriver()" ng-disabled="driversignin.$invalid" type="submit">Sign in</button>
+        </form>
+
+    </div>
+
+
+</div>
+<div class="row col-md-12 col-xs-12 w3-animate-bottom panel panel-default" ng-show="showschedule" ng-cloak>
+    <div class="panel-body col-md-12 table-responsive">
+        <h2>Hello , <span>{{dfname}}</span><span> {{dlname}}</span></h2>
+        <p>This is your schedule of passesngers</p>
+        <table class="table table-hover ">
+
+            <tr class="passengerlist">
+                <td>
+                    Locations
+                </td>
+                <td>
+                    Passenger phone number
+                </td>
+                <td>
+                    Picked up passenger
+                </td>
+
+
+            </tr>
+
+
+            <tr id="{{location._id}}" ng-repeat="location in passengerlocations">
+                <td>{{location.passenger_pos}}</td>
+                <td>{{location.passenger_number}}</td>
+                <td><span class="glyphicon glyphicon-ok text-center" ng-click="deletepassengerposition(location,driverid)" aria-hidden="true"></span></td>
+
+            </tr>
+
+
+        </table>
+    </div>
+</div>

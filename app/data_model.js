@@ -9,7 +9,9 @@ var Users_schema = new Schema({
     gender: { type: String, required: true },
     age: { type: Number, required: true },
     car: [{ Name: { type: String, required: true }, capacity: { type: Number, required: true } }],
+    passengers_info: [{ passenger_number: { type: Number } ,  passenger_pos: { type: String } }],
     location: { type: [Number], required: true }, // [Long, Lat]
+    password: { type: String },
     htmlverified: String,
     created_at: { type: Date, default: Date.now },
     updated_at: { type: Date, default: Date.now },
@@ -25,11 +27,11 @@ var Users_schema = new Schema({
 //        return false;
 //    }
 //    return true;
-    
+
 // },'Car must have features.Please enter details again');
 
 // Sets the created_at parameter equal to the current time
-Users_schema.pre('save', function(next) {
+Users_schema.pre('save', function (next) {
     now = new Date();
     this.updated_at = now;
     if (!this.created_at) {

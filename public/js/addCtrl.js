@@ -1,18 +1,24 @@
 // Creates the addCtrl Module and Controller. Note that it depends on 'geolocation' and 'locationservice' modules.
-var addCtrl = angular.module('addCtrl', ['geolocation', 'locationservice']);
-addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, locationservice) {
-    
+var addCtrl = angular.module('addCtrl', ['geolocation', 'locationservice','socketservice']);
+addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, locationservice,socketservice) {
+
     // Initializes Variables
     // ----------------------------------------------------------------------------
     $scope.formData = {};
+    $scope.loginformData = {};
     var coords = {};
     var lat = 0;
     var long = 0;
-    $scope.showLogin=false;
+    $scope.showLogin = true;
+    $scope.showschedule = false;
+    $scope.notvaliddriver=false;
+    $scope.isavaliddriver=true;
+     $scope.showregister=true;
+     $scope.seatsfull=false;
     // Set initial coordinates to the center of the US
     $scope.formData.longitude = -98.350;
     $scope.formData.latitude = 39.500;
-
+    
     // Get User's actual coordinates based on HTML5 at window load
     geolocation.getLocation().then(function (data) {
 
@@ -29,6 +35,8 @@ addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, 
         locationservice.refresh($scope.formData.latitude, $scope.formData.longitude);
 
     });
+    
+
 
     // Functions
     // ----------------------------------------------------------------------------
@@ -56,7 +64,58 @@ addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, 
         });
     };
 
+    $scope.logindriver = function () {
 
+        var driverData = {
+            phone: $scope.loginformData.loginphonenumber,
+            password: $scope.loginformData.loginpassword
+        };
+        var config = { params: driverData };
+
+        $http.get('/driverlogin', config)
+            .success(function (data) {
+                if (data != "no") {
+                    $scope.driverid=data._id;
+                    $scope.loginformData.phonenumber = "";
+                    $scope.loginformData.lastname = "";
+                    $scope.dfname = data.firstname;
+                    $scope.dlname = data.lastname;
+                    $scope.passengerlocations = data.passengers_info;
+                    $scope.showschedule = true;
+                    $scope.showLogin = false;
+                    $scope.showregister=false; 
+                    $("#map").remove();
+                }
+                    
+                           
+        else{
+                  
+                    $scope.showLogin = false;
+                    $scope.showschedule = false;
+                    $scope.notvaliddriver=true;
+                    document.getElementById("firstname").focus();
+                }
+
+            })
+            .error(function (data) {
+                console.log(data);
+            });
+    };
+    
+    $scope.deletepassengerposition=function(event,driverid){
+        
+        
+        
+      $http.put('/deleteposition/'+driverid,event)
+      .success(function(successmsg){
+          
+         
+          
+      })
+      .error(function(errormsg){
+          console.log(errormsg);
+      });
+    };
 
     // Creates a new user based on the form fields
     $scope.createUser = function () {
@@ -67,11 +126,12 @@ addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, 
             lastname: $scope.formData.lastname,
             gender: $scope.formData.gender,
             age: $scope.formData.age,
-            car: [{Name:$scope.formData.carchoice,capacity:$scope.formData.carcapacity}],
+            car: [{ Name: $scope.formData.carchoice, capacity: $scope.formData.carcapacity }],
+            password:$scope.formData.password,
             location: [$scope.formData.longitude, $scope.formData.latitude],
             htmlverified: $scope.formData.htmlverified,
-            phone:$scope.formData.phone
-        };
+            phone: $scope.formData.phone
+        }; 
 
         // Saves the user data to the db
         $http.post('/user', userData)
@@ -83,17 +143,17 @@ addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, 
                 $scope.formData.gender = "";
                 $scope.formData.age = "";
                 $scope.formData.carchoice = "";
-                $scope.formData.carcapacity="";
-                $scope.formData.phone="";
+                $scope.formData.carcapacity = "";
+                $scope.formData.phone = "";
 
                 // Refresh the map with new data
                 locationservice.refresh($scope.formData.latitude, $scope.formData.longitude);
-                $scope.showLogin=true;
+                $scope.showLogin = true;
             })
             .error(function (data) {
                 console.log('Error: ' + data);
                 $("#addPanel").removeClass("panel-success").addClass("panel-danger");
-                document.getElementById("addPanelHeading").innerHTML="Duplicate record exists";
+                document.getElementById("addPanelHeading").innerHTML = "Duplicate record exists";
             });
     };
 });

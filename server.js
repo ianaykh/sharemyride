@@ -6,6 +6,7 @@
 /// <reference path="typings/serve-static/serve-static.d.ts"/>
 /// <reference path="typings/express-serve-static-core/express-serve-static-core.d.ts"/>
 /// <reference path="typings/jquery/jquery.d.ts"/>
+/// <reference path="typings/socket.io/socket.io.d.ts"/>
 
 
 var express = require('express');
@@ -16,7 +17,8 @@ var bodyParser = require('body-parser');
 var path = require('path');
 var methodOverride = require('method-override');
 var app = express();
-var http = require('http');
+var http = require('http').Server(app);
+var io = require('socket.io')(http);
 
 // Express Configuration
 // -----------------------------------------------------
@@ -24,7 +26,8 @@ var http = require('http');
 mongoose.connect("mongodb://localhost:27017/DB1");
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'Connection failed'));
-db.once('open', function() {
+db.once('open', function () {
+
     console.log("Connection successfull- Connected to database");
 });
 
@@ -41,10 +44,13 @@ app.use(bodyParser.text());                                     // allows bodyPa
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));  // parse application/vnd.api+json as json
 app.use(methodOverride());
 
+
+
+
 // Routes
 // ------------------------------------------------------
-require('./app/routes.js')(app);
+require('./app/routes.js')(app,io);
 // Listen
 // -------------------------------------------------------
-app.listen(port);
+http.listen(port);
 console.log('App listening on port ' + port);
