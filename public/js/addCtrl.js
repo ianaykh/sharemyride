@@ -109,6 +109,7 @@ addCtrl.controller('addCtrl', function ($scope, $http, $rootScope, geolocation, 
       $http.put('/deleteposition/'+driverid,event)
       .success(function(successmsg){
           
+          console.log(successmsg);
          
           
       })
