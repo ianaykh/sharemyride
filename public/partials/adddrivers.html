@@ -153,8 +153,8 @@
             <tr id="{{location._id}}" ng-repeat="location in passengerlocations">
                 <td>{{location.passenger_pos}}</td>
                 <td>{{location.passenger_number}}</td>
-                <td><a href="" ng-click="deletepassengerposition(location,driverid)" ><span class="glyphicon glyphicon-ok"  aria-hidden="true"></span></a></td>
-
+                <td><button ng-click="deletepassengerposition(location,driverid)" class="w3-btn w3-red">remove</button></td>
+                                        
             </tr>
 
 

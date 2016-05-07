@@ -23,18 +23,18 @@ module.exports = function (app, io) {
             }
             else {
                 console.log("passenger picked up at " + passengerpickedup);
-                textbelt(pnum.toString(), 'Please confirm ,your driver is' + users._doc.firstname + ' ' + users._doc.lastname + ',with phone number: ' + users._doc.phone, function (err) {
-                    if(err)
-                    console.log(err);
-                    else
-                     console.log("message sent to passenger "+pnum +" to confirm driver details for "+ users._doc.firstname + ' ' + users._doc.lastname +" with phone number "+users._doc.phone);
-                });
-                 textbelt(users._doc.phone.toString(), 'Please confirm ,your passenger is at' + passengerpickedup +',with phone number: ' + pnum, function (err) {
-                   if(err)
-                    console.log(err);
-                    else
-                    console.log("message sent to driver "+users._doc.phone+" to confirm passenger details for "+ passengerpickedup +" with phone number "+pnum);
-                });
+                // textbelt(pnum.toString(), 'Please confirm ,your driver is' + users._doc.firstname + ' ' + users._doc.lastname + ',with phone number: ' + users._doc.phone, function (err) {
+                //     if(err)
+                //     console.log(err);
+                //     else
+                //      console.log("message sent to passenger "+pnum +" to confirm driver details for "+ users._doc.firstname + ' ' + users._doc.lastname +" with phone number "+users._doc.phone);
+                // });
+                //  textbelt(users._doc.phone.toString(), 'Please confirm ,your passenger is at' + passengerpickedup +',with phone number: ' + pnum, function (err) {
+                //    if(err)
+                //     console.log(err);
+                //     else
+                //     console.log("message sent to driver "+users._doc.phone+" to confirm passenger details for "+ passengerpickedup +" with phone number "+pnum);
+                // });
 
                 io.emit("delete:passenger", { pass_id: pid, driverdata: users });
                 res.json(users);
@@ -74,12 +74,12 @@ module.exports = function (app, io) {
             else {
                 console.log("this person has logged in " + users._doc.firstname + " " + users._doc.lastname);
                 var phonenumber = users._doc.phone.toString();
-                textbelt(phonenumber, users._doc.firstname + ' ' + users._doc.lastname + ' has signed in.Please see your logiin portal for passenger requests', function (err) {
-                    if(err)
-                    console.log(err);
-                    else
-                    console.log("Login message sent to "+users._doc.firstname+ ' ' + users._doc.lastname);
-                });
+                // textbelt(phonenumber, users._doc.firstname + ' ' + users._doc.lastname + ' has signed in.Please see your logiin portal for passenger requests', function (err) {
+                //     if(err)
+                //     console.log(err);
+                //     else
+                //     console.log("Login message sent to "+users._doc.firstname+ ' ' + users._doc.lastname);
+                // });
                 res.json(users);
                 next();
             }
@@ -122,18 +122,18 @@ module.exports = function (app, io) {
 
                                     data_inserted = { p_p: passengerphone, p_a: passengeraddress, id: myusers[0]._doc._id };
 
-                                    textbelt(users._doc.phone.toString(), 'New passenger request ! Please route your vehicle to ' + passengeraddress + '.You can contact the passenger at ' + passengerphone, function (err) {
-                                        if(err)
-                                        console.log(err);
-                                        else
-                                        console.log('New passenger request ! Please route your vehicle to ' + passengeraddress + '.You can contact the passenger at ' + passengerphone);
-                                    });
-                                     textbelt(passengerphone.toString(), 'The driver has received your message and will be calling you shortly ! Please confirm the driver is ' + users._doc.firstname+' '+users._doc.lastname + '.You can contact the driver at ' +users._doc.phone , function (err) {
-                                        if(err)
-                                        console.log(err);
-                                        else
-                                        console.log('The driver has received your message and will be calling you shortly ! Please confirm the driver is ' + users._doc.firstname+' '+users._doc.lastname + '.You can contact the driver at ' +users._doc.phone);
-                                    });
+                                    // textbelt(users._doc.phone.toString(), 'New passenger request ! Please route your vehicle to ' + passengeraddress + '.You can contact the passenger at ' + passengerphone, function (err) {
+                                    //     if(err)
+                                    //     console.log(err);
+                                    //     else
+                                    //     console.log('New passenger request ! Please route your vehicle to ' + passengeraddress + '.You can contact the passenger at ' + passengerphone);
+                                    // });
+                                    //  textbelt(passengerphone.toString(), 'The driver has received your message and will be calling you shortly ! Please confirm the driver is ' + users._doc.firstname+' '+users._doc.lastname + '.You can contact the driver at ' +users._doc.phone , function (err) {
+                                    //     if(err)
+                                    //     console.log(err);
+                                    //     else
+                                    //     console.log('The driver has received your message and will be calling you shortly ! Please confirm the driver is ' + users._doc.firstname+' '+users._doc.lastname + '.You can contact the driver at ' +users._doc.phone);
+                                    // });
                                     io.emit("addpassenger", { data: data_inserted, driverdata: users });
                                     res.json(users);
                                     next();
@@ -156,9 +156,9 @@ module.exports = function (app, io) {
                         else {
 
                             duplicateUser = { ddata: driver._doc, updated: "no" };
-                            textbelt(passengerphone.toString(),'Your request has already been handled. '+driver._doc.firstname+' '+driver._doc.lastname+ ' has received your message and will be at your location shortly ! Please stay at your location ', function (err) {
-                                        console.log(err);
-                                    });
+                            // textbelt(passengerphone.toString(),'Your request has already been handled. '+driver._doc.firstname+' '+driver._doc.lastname+ ' has received your message and will be at your location shortly ! Please stay at your location ', function (err) {
+                            //             console.log(err);
+                            //         });
                             res.json(duplicateUser);
                             
                             console.log("passenger has already a requested ride with " + driver._doc.firstname);

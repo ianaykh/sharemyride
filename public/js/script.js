@@ -13,7 +13,7 @@ $(document).ready(function (e) {
     });
      
     socket.on("addpassenger",function(pass){
-       $(".passengerlist").after("<tr id='"+pass.data.id+"'><td>"+pass.data.p_a+"</td><td>"+pass.data.p_p+"</td><td><a href='' ng-click='deletepassengerposition(location,driverid)' ><span class='glyphicon glyphicon-ok'  aria-hidden='true'></span></a></td></tr>");
+       $(".passengerlist").after("<tr id='"+pass.data.id+"'><td>"+pass.data.p_a+"</td><td>"+pass.data.p_p+"</td><td><button ng-click='deletepassengerposition(location,driverid)' class='w3-btn w3-red'>remove</button></td></tr>");
       nowseats=  $("tr#"+pass.driverdata._id+"> td.currentseats").text();
      seats=Number(nowseats)+1;
      $("tr#"+pass.driverdata._id+"> td.currentseats").text(seats);
